@@ -6,14 +6,14 @@
 	<table>
 		<tr>
 			<td>User Name :</td>
-			<td><form:input path="username" /></td>
+			<td><form:input path="uname" /></td>
 		</tr>
 		<tr>
 			<td>Password :</td>
-			<td><form:input path="password" /></td>
+			<td><form:password path="password" /></td>
 		</tr>
 		<tr>
-			<td>Name :</td>
+			<td>Employee Name :</td>
 			<td><form:input path="empname" /></td>
 		</tr>
 		<tr>
@@ -21,12 +21,12 @@
 			<td><form:input path="empaddress" /></td>
 		</tr>
 		<tr>
-			<td>empAge :</td>
-			<td><form:input path="empAge" /></td>
-		</tr>
-		<tr>
 			<td>Salary :</td>
 			<td><form:input path="salary" /></td>
+		</tr>
+		<tr>
+			<td>BOD :</td>
+			<td><form:input path="birthdate" /></td>
 		</tr>
 		<tr>
 			<td>Designation :</td>

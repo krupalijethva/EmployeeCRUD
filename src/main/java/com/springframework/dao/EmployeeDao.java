@@ -2,16 +2,18 @@ package com.springframework.dao;
 
 import java.util.List;
 
-import com.springframework.vo.employeetbl;
+import com.springframework.vo.employeeInfo;
 
 public interface EmployeeDao {
+	
+	public  void addEmployee(Object employee);
 
-	 public  void addEmployee(employeetbl employee);
-
-	 public List<Object> listEmployeess();
+	 public List<employeeInfo> listEmployeess();
+	 	 
+	 public void deleteEmployee(int id);
 	 
-	 public employeetbl getEmployee(int empid);
+	 public employeeInfo getEmployeeById(int id);
 	 
-	 public void deleteEmployee(employeetbl employee);
-
+	 public void updateEmployee(employeeInfo p);
+		
 }

@@ -13,28 +13,29 @@
 	<table border="2" width="70%" cellpadding="2">
 		<tr>
 			<th>Id</th>
-			<th>Name</th>
-			<th>Salary</th>
-			<th>Designation</th>
-			<th>Address</th>
-			<th>Age</th>
 			<th>UserName</th>
 			<th>password</th>
+			<th>Name</th>
+			<th>Address</th>
+			<th>Salary</th>
+			<th>birthdate</th>
+			<th>Designation</th>
 			<th>Edit</th>
 			<th>Delete</th>
 		</tr>
 		<c:forEach var="emp" items="${list}">
 			<tr>
-				<td>${emp.empid}</td>
+				<td>${emp.id}</td>
+				<td>${emp.uname}</td>
+				<td>${emp.password}</td>
 				<td>${emp.empname}</td>
-				<td>${emp.salary}</td>
-				<td>${emp.designation}</td>
 				<td>${emp.empaddress}</td>
-				<td>${emp.empAge}</td>
-				<td>${emp.username}</td>
-				<td>${emp.password }</td>
-				<td><a href="editemp?id=${emp.empid}">Edit</a></td>
-				<td><a href="deleteemp?id=${emp.empid}">Delete</a></td>
+				<td>${emp.salary}</td>
+				<td>${emp.birthdate}</td>
+				<td>${emp.designation}</td>
+				<td><a href="deleteemp?id=${emp.id}">Delete</a></td>
+				<td><a href="edit?id=${emp.id}">Edit</a></td>
+
 			</tr>
 		</c:forEach>
 	</table>
