@@ -11,6 +11,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 @Entity
 @Table(name = "login")
 public class login implements Serializable {
@@ -24,7 +27,9 @@ public class login implements Serializable {
 	@Column(name="password")
 	private String password;
 	
-	@ManyToOne @JoinColumn(name="ULid")
+	@ManyToOne 
+	
+	@JoinColumn(name="ULid")
 	private employeeInfo employeeInfo;
 
 	public int getLid() {

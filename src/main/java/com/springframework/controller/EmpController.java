@@ -1,9 +1,11 @@
 package com.springframework.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,11 +14,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-
 import com.springframework.service.empService;
+import com.springframework.vo.Country;
 import com.springframework.vo.employeeInfo;
 import com.springframework.vo.login;
 
@@ -45,6 +48,7 @@ public class EmpController {
 			return new ModelAndView("errorpage", "message", "Sorry, username or password error");
 		}
 	}
+
 	// load empform
 	@RequestMapping(value = "/empform", method = RequestMethod.GET)
 	public ModelAndView showform() {
@@ -53,8 +57,9 @@ public class EmpController {
 
 	// insert or add employee
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public ModelAndView save(@ModelAttribute("empform") employeeInfo emp,@ModelAttribute("login") login login, HttpServletRequest request) {
-		
+	public ModelAndView save(@ModelAttribute("empform") employeeInfo emp, @ModelAttribute("login") login login,
+			HttpServletRequest request) {
+
 		String uname = request.getParameter("uname");
 		String password = request.getParameter("password");
 		String empname = request.getParameter("empname");
@@ -69,19 +74,19 @@ public class EmpController {
 		emp.setSalary(salary);
 		emp.setBirthdate(birthdate);
 		emp.setDesignation(designation);
-			
+
 		login.setUname(uname);
 		login.setPassword(password);
 		login.setEmployeeInfo(emp);
-		
+
 		System.out.println(emp);
-		
+
 		if (emp.getId() == 0) {
 			this.empservice.addEmployee(emp);
 			this.empservice.addEmployee(login);
 		}
 		// dao.addEmployee(emp);
-		return new ModelAndView("redirect:/viewemp");// will redirect to viewemp request mapping
+		return new ModelAndView("redirect:/login");// will redirect to viewemp request mapping
 	}
 
 	// show employee data
@@ -89,15 +94,20 @@ public class EmpController {
 	public ModelAndView viewemp() {
 		employeeInfo employeeInfo = new employeeInfo();
 		List<employeeInfo> list = this.empservice.listEmployeess();
-		// List<Object> list = dao.listEmployeess();
+		// List<login> list = this.empservice.listLogin();
 		return new ModelAndView("viewemp", "list", list);
 	}
 
 	// delete from DB
 	@RequestMapping(value = "/deleteemp", method = RequestMethod.GET)
-	public String deleteEmployee(int id) {
+	public ModelAndView deleteEmployee(int id) {
+		// child id
+		login login = new login();
+		List<login> list = this.empservice.listLogin();
+		System.out.println(id);
 		this.empservice.deleteEmployee(id);
-		return "redirect:/viewemp";
+		return new ModelAndView("viewemp", "list", list);
+		// return "redirect:/viewemp";
 	}
 
 	// edit form load
@@ -109,10 +119,10 @@ public class EmpController {
 		return "edit";
 	}
 
-	// update //temp15
+	// update
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public String update(@ModelAttribute("employeeInfo") employeeInfo emp, HttpServletRequest request,
-			HttpServletResponse response) {
+	public String update(@ModelAttribute("employeeInfo") employeeInfo emp, @ModelAttribute("login") login login,
+			HttpServletRequest request, HttpServletResponse response) {
 
 		System.out.println("in update the controller");
 		// int id =Integer.parseInt(request.getParameter("id"));
@@ -134,10 +144,13 @@ public class EmpController {
 		emp.setBirthdate(birthdate);
 		emp.setDesignation(designation);
 
-		// System.out.println(id);
+		login.setUname(uname);
+		login.setPassword(password);
+
 		System.out.println(emp);
 		// existing person, call update
 		this.empservice.updateEmployee(emp);
+		this.empservice.updateEmployee(login);
 		return "redirect:/viewemp";
 	}
 
@@ -146,5 +159,41 @@ public class EmpController {
 	public ModelAndView login(HttpServletRequest request) {
 		return new ModelAndView("login", "login", new login());
 	}
-	
+
+	@RequestMapping(value = "/loginForm", method = RequestMethod.POST)
+	public ModelAndView loginProcess(@ModelAttribute("login") login login, HttpSession ss, HttpServletRequest request) {
+
+		/*
+		 * String uname = request.getParameter("uname"); String password =
+		 * request.getParameter("password"); //login.setUname(uname);
+		 * //login.setPassword(password);
+		 */ List<login> list = this.empservice.loginProcess(login);
+		HttpSession session = request.getSession();
+		session.setAttribute("ls", list);
+		if (list.size() == 0) {
+			System.out.println("login");
+			return new ModelAndView("login", "reg", login);
+
+		} else {
+			System.out.println("welcome");
+			return new ModelAndView("welcome", "wc", login);
+		}
+	}
+
+	@RequestMapping(value = "/countries", method = RequestMethod.GET, headers = "Accept=application/json")
+	public List getCountries() {
+		List listOfCountries = empService.getAllCountries();
+		return listOfCountries;
+	}
+
+	@RequestMapping(value = "/addcountry", method = RequestMethod.POST)
+	public ModelAndView addCountry(@RequestBody Country country) {
+
+		return null;
+
+		// return empService.addCountry(country);
+	}
+
+	// temp21
+
 }
